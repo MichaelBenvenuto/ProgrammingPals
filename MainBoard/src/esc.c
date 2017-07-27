@@ -6,10 +6,16 @@ esc_t* createSpeedController(int pin){
 }
 
 void freeSpeedController(esc_t* esc){
-    freePin(esc.p);
+    freePWMPin(esc.p);
     free(esc);
 }
 
 int setSpeed(esc_t* esc, double speed){
-    p.speed = speed;
+    if(esc){
+        esc.speed = speed;
+        setValue(esc->p, (int)(speed * 1024.0f));
+    }else{
+        return 0;
+    }
+    return 1;
 }

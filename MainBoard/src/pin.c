@@ -8,6 +8,20 @@
 int export = 0;
 int unexport = 0;
 
+int pinBufSize = 0;
+int* pins = 0;
+
+int pinExists(int pin){
+    if(pins){
+        for(int i = 0; i < pinBufSize; i++){
+            if(pins[i] == pin){
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 
 int nLength(int x){
     int c;
@@ -51,8 +65,10 @@ int readPin(pin_t* pin){
 }
 
 
-void writePin(pin_t* pin, int id){
-    return write(pin.id);
+int writePin(pin_t* pin, int val){
+    char c;
+    sprintf(&c, "%i", val);
+    return write(pin.id, &c);
 }
 
 
@@ -67,7 +83,7 @@ pin_t* createPin(int pin, int direction){
 
     int pinSize = nLength(pin);
 
-    if(!(export > 0 && unexport > 0)){
+    if((export > 0 && unexport > 0) && !pinExists(pin)){
 
         char* pinChar = (char*)malloc(pinSize * sizeof(char));
         sprintf(pinChar, "%i", pin);
@@ -94,6 +110,10 @@ pin_t* createPin(int pin, int direction){
         }
         close(dir);
         pin.direction = direction;
+
+        pinBufSize++;
+        pins = (int*)realloc(pins, pinBufSize * sizeof(int));
+        pins[pinBufSize - 1] = pin;
 
         return pin;
 

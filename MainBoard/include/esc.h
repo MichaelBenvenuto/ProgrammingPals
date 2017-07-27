@@ -4,7 +4,7 @@
 #include "pin.h"
 
 struct {
-    pin_t* p;
+    pwm_t* p;
     double speed;
 } esc_t;
 
