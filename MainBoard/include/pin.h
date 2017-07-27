@@ -5,6 +5,7 @@
 #define OUT 1
 
 struct {
+    int number;
     int valID;
     int dirID;
     unsigned int direction : 1;

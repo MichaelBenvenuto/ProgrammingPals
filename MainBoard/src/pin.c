@@ -30,7 +30,19 @@ int nLength(int x){
     return c;
 }
 
+
 void freePin(pin_t* pin){
+    int freedPin = 0;
+    for(int i = 0; i < pinBufSize - 1; i++){
+        if(pin->number == pins[i]){
+            freedPin = 1;
+        }
+        if(freedPin){
+            pins[i] = pins[i + 1];
+        }
+    }
+    pinBufSize--;
+    pins = realloc(pins, pinBufSize * sizeof(int));
     close(pin.dirID);
     close(pin.valID);
     free(pin.dirBuffer);
@@ -114,6 +126,8 @@ pin_t* createPin(int pin, int direction){
         pinBufSize++;
         pins = (int*)realloc(pins, pinBufSize * sizeof(int));
         pins[pinBufSize - 1] = pin;
+
+        pin->number = pin;
 
         return pin;
 
