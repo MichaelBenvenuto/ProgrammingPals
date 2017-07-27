@@ -1,24 +1,26 @@
-#include "pwm->h"
+#include "pwm.h"
 
 void* update(void* vargsp){
     pwm_t* pin = (pwm_t*)vargsp;
-    if(pin->p->direction == OUT){
-        pin->timer++;
-        if(pin->timer >= val && pin->p->direction){
-            writePin(pin->p, 0);
-        }else if(pin->timer < val && !pin->p->direction){
-            writePin(pin->p, 1);
-        }
-        if(pin->timer > 1024){
-            pin->timer = 0;
-        }
-    }else if(pin->p->direction == IN){
-        pin->timer++;
-        if(!readPin(pin->p)){
-            pin->val = pin->timer;
-        }
-        if(pin->timer > 1024){
-            pin->timer = 0;
+    for(;;){
+        if(pin->p->direction == OUT){
+            pin->timer++;
+            if(pin->timer >= val && pin->p->direction){
+                writePin(pin->p, 0);
+            }else if(pin->timer < val && !pin->p->direction){
+                writePin(pin->p, 1);
+            }
+            if(pin->timer > 1024){
+                pin->timer = 0;
+            }
+        }else if(pin->p->direction == IN){
+            pin->timer++;
+            if(!readPin(pin->p)){
+                pin->val = pin->timer;
+            }
+            if(pin->timer > 1024){
+                pin->timer = 0;
+            }
         }
     }
 }
@@ -34,6 +36,10 @@ void freePWMPin(pwm_t* pwm){
     freePin(pwm->p);
     pthread_join(pwm->tid);
     free(pwm);
+}
+
+int setDirection(pwm_t* pwm, int direction){
+    return setDirection(pwm->p, direction);
 }
 
 void setValue(pwm_t* pwm, int val){

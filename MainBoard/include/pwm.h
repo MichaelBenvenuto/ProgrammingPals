@@ -15,6 +15,7 @@ struct {
 pwm_t* createPWMPin(int pin, int direction);
 void freePWMPin(pwm_t* pwm);
 
+int setDirection(pwm_t* pwm, int direction);
 void setValue(pwm_t* pwm, int speed);
 int readValue(pwm_t* pwm);
 

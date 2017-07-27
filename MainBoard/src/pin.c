@@ -51,7 +51,7 @@ void freePin(pin_t* pin){
 }
 
 
-int changeDirection(pin_t* pin, int direction){
+int setDirection(pin_t* pin, int direction){
     int err;
     if(direction == OUT){
         err = write(dir, "out", 3);
