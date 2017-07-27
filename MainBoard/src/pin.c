@@ -43,10 +43,10 @@ void freePin(pin_t* pin){
     }
     pinBufSize--;
     pins = realloc(pins, pinBufSize * sizeof(int));
-    close(pin.dirID);
-    close(pin.valID);
-    free(pin.dirBuffer);
-    free(pin.valBuffer);
+    close(pin->dirID);
+    close(pin->valID);
+    free(pin->dirBuffer);
+    free(pin->valBuffer);
     free(pin);
 }
 
@@ -61,7 +61,7 @@ int changeDirection(pin_t* pin, int direction){
         return -1;
     }
 
-    pin.direction = direction;
+    pin->direction = direction;
 
     return err;
 }
@@ -69,7 +69,7 @@ int changeDirection(pin_t* pin, int direction){
 
 int readPin(pin_t* pin){
     char c;
-    int err = read(pin.id, &c, sizeof(char));
+    int err = read(pin->id, &c, sizeof(char));
     if(err < 0){
         return -1;
     }
@@ -80,7 +80,7 @@ int readPin(pin_t* pin){
 int writePin(pin_t* pin, int val){
     char c;
     sprintf(&c, "%i", val);
-    return write(pin.id, &c);
+    return write(pin->id, &c);
 }
 
 
@@ -104,14 +104,14 @@ pin_t* createPin(int pin, int direction){
 
         pin_t* pin = (pin_t*)malloc(sizeof(pin_t));
     
-        pin.valBuffer = (char*)malloc((26 + pinSize) * sizeof(char));
-        sprintf(pin.valBuffer, "/sys/class/gpio/gpio%s/value", pinChar);
+        pin->valBuffer = (char*)malloc((26 + pinSize) * sizeof(char));
+        sprintf(pin->valBuffer, "/sys/class/gpio/gpio%s/value", pinChar);
 
-        pin.dirBuffer = (char*)malloc((30 + pinSize) * sizeof(char));
-        sprintf(pin.dirBuffer, "/sys/class/gpio/gpio%s/direction", pinChar);
+        pin->dirBuffer = (char*)malloc((30 + pinSize) * sizeof(char));
+        sprintf(pin->dirBuffer, "/sys/class/gpio/gpio%s/direction", pinChar);
 
-        pin.valID = open(pin.buffer, O_RDWR | O_TRUNC);
-        pin.dirID = open(pin.dirBuffer, O_RDWR | O_TRUNC);
+        pin->valID = open(pin->buffer, O_RDWR | O_TRUNC);
+        pin->dirID = open(pin->dirBuffer, O_RDWR | O_TRUNC);
         
         if(direction == OUT){
             write(dir, "out", 3);
@@ -121,7 +121,7 @@ pin_t* createPin(int pin, int direction){
             return -1;
         }
         close(dir);
-        pin.direction = direction;
+        pin->direction = direction;
 
         pinBufSize++;
         pins = (int*)realloc(pins, pinBufSize * sizeof(int));
