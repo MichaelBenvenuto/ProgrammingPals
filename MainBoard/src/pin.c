@@ -1,4 +1,5 @@
 #include "pin.h"
+#include "numbers.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -21,15 +22,6 @@ int pinExists(int pin){
     }
     return 0;
 }
-
-
-int nLength(int x){
-    int c;
-    int n = x;
-    for(c = 0; n != 0; c++, n /= 10);
-    return c;
-}
-
 
 void freePin(pin_t* pin){
     int freedPin = 0;

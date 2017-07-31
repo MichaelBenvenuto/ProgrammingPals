@@ -26,10 +26,10 @@ void* update(void* vargsp){
 }
 
 pwm_t* createPWMPin(int pin, int direction){
-    pwm_t* pin = (pwm_t*)malloc(sizeof(pwm_t));
-    pin->p = createPin(pin, direction);
-    pthread_create(pin->tid, NULL, update, (void*)pin);
-    return pin;
+    pwm_t* pwmpin = (pwm_t*)malloc(sizeof(pwm_t));
+    pwmpin->p = createPin(pin, direction);
+    pthread_create(pwmpin->tid, NULL, update, (void*)pwmpin);
+    return pwmpin;
 }
 
 void freePWMPin(pwm_t* pwm){
